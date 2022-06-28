@@ -420,3 +420,48 @@ void Cube::ApplySequence(std::string sStr)
 	Sequence s(sStr);
 	this->ApplySequence(s);
 }
+
+bool Cube::IsSolved()
+{
+	std::vector<Colour> x1, x2, y1, y2, z1, z2;
+	for (int z = 0; z < order; z++)
+	{
+		for (int y = 0; y < order; y++)
+		{
+			for (int x = 0; x < order; x++)
+			{
+				int index = Index(x, y, z);
+				Piece& pieceRef = *pieces[index];
+
+				if (x == 0) { x1.push_back(pieceRef.xaxis); }
+				if (x == order - 1) { x2.push_back(pieceRef.xaxis); }
+				if (y == 0) { y1.push_back(pieceRef.yaxis); }
+				if (y == order - 1) { y2.push_back(pieceRef.yaxis); }
+				if (z == 0) { z1.push_back(pieceRef.zaxis); }
+				if (z == order - 1) { z2.push_back(pieceRef.zaxis); }
+			}
+		}
+	}
+
+	bool solved = true;
+
+	Colour col = x1[0];
+	for (Colour c : x1) { if (c.colour != col.colour) { solved = false; } }
+
+	col = x2[0];
+	for (Colour c : x2) { if (c.colour != col.colour) { solved = false; } }
+
+	col = y1[0];
+	for (Colour c : y1) { if (c.colour != col.colour) { solved = false; } }
+
+	col = y2[0];
+	for (Colour c : y2) { if (c.colour != col.colour) { solved = false; } }
+
+	col = z1[0];
+	for (Colour c : z1) { if (c.colour != col.colour) { solved = false; } }
+
+	col = z2[0];
+	for (Colour c : z2) { if (c.colour != col.colour) { solved = false; } }
+
+	return solved;
+}

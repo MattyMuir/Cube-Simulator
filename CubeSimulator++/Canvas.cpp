@@ -4,6 +4,7 @@ wxBEGIN_EVENT_TABLE(Canvas, wxPanel)
 	EVT_PAINT(Canvas::OnPaint)
 	EVT_SIZE(Canvas::Resized)
 	EVT_LEFT_DOWN(Canvas::MouseDown)
+	EVT_IDLE(Canvas::Idle)
 wxEND_EVENT_TABLE()
 
 Canvas::Canvas(wxWindow* parent_) : wxPanel(parent_, wxID_ANY)
@@ -14,10 +15,30 @@ Canvas::Canvas(wxWindow* parent_) : wxPanel(parent_, wxID_ANY)
 	debugStr = "";
 	srand(time(0));
 
-	cube.ApplySequence("F R' D2 F D2 L F' B L' B' D'");
+	int longestRepeat = 0;
+	Sequence bestSequence;
 
-	Sequence solution = solver(cube);
-	debugStr = wxString(solution.ToString());
+	for (int i = 0; i < 10000; i++)
+	{
+		cube.Reset();
+		Sequence s = Sequence::RandomSequence(rand() % 19 + 2);
+		int repeats = 0;
+		do
+		{
+			cube.ApplySequence(s);
+			repeats++;
+		} while (!cube.IsSolved());
+
+		repeats *= s.turns.size();
+		
+		if (repeats > longestRepeat || ((repeats == longestRepeat) && (s.turns.size() < bestSequence.turns.size())))
+		{
+			longestRepeat = repeats;
+			bestSequence = s;
+		}
+	}
+	
+	debugStr = wxString::Format(wxT("%i"), longestRepeat) + "\n" + bestSequence.ToString();
 }
 
 Canvas::~Canvas()
@@ -93,6 +114,16 @@ void Canvas::Resized(wxSizeEvent& evt)
 	evt.Skip();
 }
 
+void Canvas::Idle(wxIdleEvent& evt)
+{
+	/*if (!cube.IsSolved())
+	{
+		cube.ApplySequence("R' D' L' U'");
+		this->Refresh();
+		this->Update();
+	}*/
+}
+
 void dostuff()
 {
 
@@ -100,7 +131,11 @@ void dostuff()
 
 void Canvas::MouseDown(wxMouseEvent& evt)
 {
-	debugStr = "Searching...";
+	Sequence solution = solver(cube);
+	cube.ApplySequence(solution);
+	this->Refresh();
+
+	/*debugStr = "Searching...";
 	this->Refresh();
 	this->Update();
 
@@ -130,6 +165,6 @@ void Canvas::MouseDown(wxMouseEvent& evt)
 	debugStr = wxString(scramble.ToString()) + "\n" + wxString(crossSolution.ToString()) + "\n" + wxString::Format(wxT("%i"), searched);
 
 	this->Refresh();
-	this->Update();
-	parent->Destroy();
+	this->Update();*/
+	//parent->Destroy();
 }

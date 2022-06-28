@@ -20,6 +20,7 @@ protected:
 	void OnDraw(wxDC& dc);
 	void OnPaint(wxPaintEvent& evt);
 	void Resized(wxSizeEvent& evt);
+	void Idle(wxIdleEvent& evt);
 
 	void MouseDown(wxMouseEvent& evt);
 

@@ -126,7 +126,7 @@ Sequence CrossSolver::operator()(Cube& solveTarget)
     }
 
     Sequence s = Sequence();
-    for (int i = 0; i < turnsBackward.size(); i++)
+    for (int i = 1; i < turnsBackward.size(); i++)
     {
         s.turns.push_back(turnsBackward[turnsBackward.size() - 1 - i]);
     }

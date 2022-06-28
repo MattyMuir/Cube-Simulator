@@ -15,9 +15,11 @@ enum class Face { UP, DOWN, RIGHT, LEFT, FRONT, BACK };
 class Cube
 {
 public:
+	// Attributes
 	std::vector<std::shared_ptr<Piece>> pieces;
 	int order;
 
+	// Methods
 	Cube();
 	Cube(int order_, bool coloured);
 	int Index(int x, int y, int z);
@@ -32,6 +34,7 @@ public:
 	void ApplySequence(Sequence& seq);
 	void ApplyTurn(std::string tStr);
 	void ApplySequence(std::string sStr);
+	bool IsSolved();
 
 	void Reset();
 	void CopyColours(Cube& targetCube);
